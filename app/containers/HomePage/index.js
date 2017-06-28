@@ -12,13 +12,33 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
+import NoteTextField from 'components/NoteTextField';
+import NoteCardList from 'components/NoteCardList';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as homeActions from './actions';
+import { createSelector } from 'reselect';
+import { makeSelectNotes } from './selectors';
 
-export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
-      <h1>
-        <FormattedMessage {...messages.header} />
-      </h1>
+      <div>
+      	<NoteTextField onAdd={this.props.addNote} />
+      	<NoteCardList notes={this.props.notes} onDeleteNote={this.props.deleteNote} onUpdateNote={this.props.updateNote} />
+      </div>
     );
   }
 }
+
+
+const mapStateToProps = createSelector(
+  makeSelectNotes(),
+  (state) => ({ notes:  state.list})
+);
+
+function mapDispatchToProps(dispatch) {
+  	return bindActionCreators({...homeActions}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

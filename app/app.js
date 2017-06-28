@@ -16,6 +16,8 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
 import 'sanitize.css/sanitize.css';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin()
 
 // Import root app
 import App from 'containers/App';
@@ -63,10 +65,11 @@ const rootRoute = {
   component: App,
   childRoutes: createRoutes(store),
 };
-
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 const render = (messages) => {
   ReactDOM.render(
     <Provider store={store}>
+    <MuiThemeProvider>
       <LanguageProvider messages={messages}>
         <Router
           history={history}
@@ -77,7 +80,9 @@ const render = (messages) => {
             applyRouterMiddleware(useScroll())
           }
         />
+
       </LanguageProvider>
+      </MuiThemeProvider>
     </Provider>,
     document.getElementById('app')
   );
